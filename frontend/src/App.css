@@ -1,0 +1,11 @@
+.App {}
+
+.Heading {
+    color: rgb(104, 104, 104);
+    display: table;
+    font-size: 53px;
+    margin-top: 30px;
+    margin-left: auto;
+    margin-right: auto;
+    z-index: 1;
+}

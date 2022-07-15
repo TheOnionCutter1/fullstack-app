@@ -20,7 +20,7 @@ function App()
 
   return (
     <div className="App">
-      {(typeof backendData.message == "undefined") ? (
+      {(backendData.message) ? (
         <p>Loading...</p>
       ) : (
         <p>{"Messasge: " + backendData.message}</p>

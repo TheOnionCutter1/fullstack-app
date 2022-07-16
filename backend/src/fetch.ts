@@ -49,7 +49,22 @@ function requestData()
   return returnedJson;
 }
 
-function fetchCoinData()
+function writeDataToDatabase(data: CoinInfo)
+{
+  // TODO implement
+}
+
+function isDataInDatabase()
+{
+  // TODO implement
+}
+
+function getDataFromDatabase()
+{
+  // TODO implement
+}
+
+export default function fetchCoinData()
 {
   // TODO implement
 }

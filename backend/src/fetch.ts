@@ -17,7 +17,7 @@ interface CoinInfo
 function requestData()
 {
   const myHeaders = new Headers();
-  let returnedJson: CoinInfo = {
+  const errorResult: CoinInfo = {
     success: false,
     rates: {}
   };
@@ -34,19 +34,16 @@ function requestData()
     headers: myHeaders
   };
 
-  fetch(FETCH_URL,
+  return fetch(FETCH_URL,
     requestOptions)
     .then(response => response.text())
-    .then(requestResult => returnedJson = JSON.parse(requestResult))
+    .then(requestResult => JSON.parse(requestResult) as CoinInfo)
     .catch(error =>
     {
       console.log("error", error);
-      returnedJson.success = false;
+
+      return errorResult;
     });
-
-  console.log(returnedJson);
-
-  return returnedJson;
 }
 
 function writeDataToDatabase(data: CoinInfo)

@@ -1,3 +1,9 @@
+import sqlite from "sqlite3";
+import fs from "fs";
+
+const DB_PATH = `${__dirname}/../data/CoinDatabase.db`;
+const DB_INIT_FILE = `${__dirname}/../data/DBinit.sql`;
+
 const BASE_COIN = "USD";
 const START_DATE = "2021-01-01";
 const END_DATE = "2021-12-31";
@@ -44,6 +50,16 @@ function requestData()
 
       return errorResult;
     });
+}
+
+function openDatabase()
+{
+  const db = new sqlite.Database(DB_PATH);
+  const dbInitStatement = fs.readFileSync(DB_INIT_FILE);
+
+  db.run(dbInitStatement.toString());
+
+  return db;
 }
 
 function writeDataToDatabase(data: CoinInfo)

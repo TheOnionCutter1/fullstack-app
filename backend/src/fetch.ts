@@ -62,7 +62,16 @@ function openDatabase()
 
 function writeDataToDatabase(db: sqlite.Database, data: CoinInfo)
 {
-  // TODO implement
+  const statement = db.prepare("INSERT INTO CoinValue (coin, entryDate, price) " +
+    "VALUES (?, ?, ?);");
+
+  for (const date of Object.keys(data.rates))
+  {
+    for (const coin of Object.keys(data.rates[date]))
+    {
+      statement.run(coin, date, data.rates[date][coin]);
+    }
+  }
 }
 
 function getDataFromDatabase(db: sqlite.Database,
@@ -84,8 +93,7 @@ function getDataFromDatabase(db: sqlite.Database,
     {
       data.rates[row.entryDate][row.coin] = row.price;
     }
-  },
-  (_, count) => callback(count > 0, data));
+  }, (_, count) => callback(count > 0, data));
 }
 
 export default function fetchCoinData()

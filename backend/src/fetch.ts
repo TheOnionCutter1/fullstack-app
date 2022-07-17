@@ -67,9 +67,12 @@ function writeDataToDatabase(data: CoinInfo)
   // TODO implement
 }
 
-function isDataInDatabase()
+function isDatabaseEmpty(db: sqlite.Database,
+  callback: (result: boolean) => unknown)
 {
-  // TODO implement
+  const statement = "SELECT COUNT(*) FROM CoinValue;";
+
+  db.each(statement, (_, count) => callback(count > 0));
 }
 
 function getDataFromDatabase()

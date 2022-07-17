@@ -85,14 +85,35 @@ function writeDataToDatabase(db: sqlite.Database, data: CoinInfo)
 {
   const statement = db.prepare("INSERT INTO CoinValue " +
     "(coin, entryDate, price) VALUES (?, ?, ?);");
+  let rollback = false;
 
-  for (const date of Object.keys(data.rates))
+  // Write the changes in serialized mode
+  // so the queries will run one by one
+  db.serialize(() =>
   {
-    for (const coin of Object.keys(data.rates[date]))
+    db.run("BEGIN;");
+    for (const date of Object.keys(data.rates))
     {
-      statement.run(coin, date, data.rates[date][coin]);
+      for (const coin of Object.keys(data.rates[date]))
+      {
+        if (rollback)
+        {
+          return;
+        }
+
+        statement.run([coin, date, data.rates[date][coin]], (err) =>
+        {
+          if (err)
+          {
+            console.error("Data is already written, rolling back");
+            db.run("ROLLBACK;");
+            rollback = true;
+          }
+        });
+      }
     }
-  }
+    db.run("COMMIT;");
+  });
 }
 
 /**

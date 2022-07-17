@@ -65,17 +65,27 @@ function writeDataToDatabase(db: sqlite.Database, data: CoinInfo)
   // TODO implement
 }
 
-function isDatabaseEmpty(db: sqlite.Database,
-  callback: (result: boolean) => unknown)
+function getDataFromDatabase(db: sqlite.Database,
+  callback: (empty: boolean, result: CoinInfo) => unknown)
 {
-  const statement = "SELECT COUNT(*) FROM CoinValue;";
+  const data: CoinInfo = {
+    success: true,
+    rates: {}
+  };
+  const statement = "SELECT * FROM CoinValue";
 
-  db.each(statement, (_, count) => callback(count > 0));
-}
-
-function getDataFromDatabase(db: sqlite.Database)
-{
-  // TODO implement
+  db.each(statement, (err, row) =>
+  {
+    if (err)
+    {
+      data.success = false;
+    }
+    else
+    {
+      data.rates[row.entryDate][row.coin] = row.price;
+    }
+  },
+  (_, count) => callback(count > 0, data));
 }
 
 export default function fetchCoinData()

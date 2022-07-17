@@ -45,7 +45,7 @@ async function requestData()
   };
 
   try
-    {
+  {
     const response = await fetch(FETCH_URL, requestOptions);
     const requestResult = await response.json();
 
@@ -150,7 +150,28 @@ function getDataFromDatabase(db: sqlite.Database,
   }, (_, count) => callback(count > 0, data));
 }
 
-export default function fetchCoinData()
+/**
+ * Fetch the coin data.
+ * If any data is present at the database, fetch from it.
+ * Otherwise, fetch from the Fixer.io api and write the result to the database.
+ * @param callback A callback function that is called when the data is fetched
+ * and receives it as a parameter.
+ */
+export default function fetchCoinData(callback: (data: CoinInfo) => void)
 {
-  // TODO implement
+  openDatabase((db) =>
+  {
+    getDataFromDatabase(db, (empty, data) =>
+    {
+      if (empty)
+      {
+        requestData().then((result) => callback(result));
+      }
+      else
+      {
+        callback(data);
+        writeDataToDatabase(db, data);
+      }
+    });
+  });
 }

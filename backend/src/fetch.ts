@@ -58,14 +58,15 @@ function requestData()
 
 /**
  * Open the database and create the required table in it, if they do not exist.
- * @returns The opened database object.
+ * @param callback A callback that receives the database object and will
+ * be called when the database initialization is over.
  */
-function openDatabase()
+function openDatabase(callback: (db: sqlite.Database | null) => void)
 {
   const db = new sqlite.Database(DB_PATH);
   const dbInitStatement = fs.readFileSync(DB_INIT_FILE);
 
-  return db.exec(dbInitStatement.toString());
+  db.exec(dbInitStatement.toString(), (_) => callback(db));
 }
 
 /**
@@ -75,8 +76,8 @@ function openDatabase()
  */
 function writeDataToDatabase(db: sqlite.Database, data: CoinInfo)
 {
-  const statement = db.prepare("INSERT INTO CoinValue " + 
-  "(coin, entryDate, price) VALUES (?, ?, ?);");
+  const statement = db.prepare("INSERT INTO CoinValue " +
+    "(coin, entryDate, price) VALUES (?, ?, ?);");
 
   for (const date of Object.keys(data.rates))
   {
@@ -97,7 +98,7 @@ function writeDataToDatabase(db: sqlite.Database, data: CoinInfo)
  * The second parameter is the data that was read from the database.
  */
 function getDataFromDatabase(db: sqlite.Database,
-  callback: (empty: boolean, result: CoinInfo) => unknown)
+  callback: (empty: boolean, result: CoinInfo) => void)
 {
   const data: CoinInfo = {
     success: true,

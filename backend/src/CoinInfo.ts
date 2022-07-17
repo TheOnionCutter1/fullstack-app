@@ -1,4 +1,4 @@
-export default interface CoinInfo
+interface CoinInfo
 {
   success: boolean;
   rates: {
@@ -7,3 +7,5 @@ export default interface CoinInfo
     }
   }
 }
+
+export default CoinInfo;

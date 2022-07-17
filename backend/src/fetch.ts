@@ -63,7 +63,7 @@ async function requestData()
  * @param callback A callback that receives the database object and will
  * be called when the database initialization is over.
  */
-function openDatabase(callback: (db: sqlite.Database | null) => void)
+function openDatabase(callback: (db: sqlite.Database) => void)
 {
   const db = new sqlite.Database(DB_PATH);
   const dbInitStatement = fs.readFileSync(DB_INIT_FILE);
@@ -105,6 +105,7 @@ function writeDataToDatabase(db: sqlite.Database, data: CoinInfo)
 
         statement.run([coin, date, data.rates[date][coin]], (err) =>
         {
+          // An error will be raised only if the unique constraint failed
           if (err)
           {
             console.error("Data is already written, rolling back");

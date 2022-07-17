@@ -25,7 +25,9 @@ async function requestData()
 
   if (process.env.API_KEY === undefined)
   {
-    throw new Error("Please create a .env file and enter a Fixer.io API key");
+    throw new Error(
+      "Please create a .env file and enter a Fixer.io API key under the API_KEY field"
+    );
   }
   myHeaders.append("apikey", process.env.API_KEY);
 

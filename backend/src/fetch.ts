@@ -1,5 +1,6 @@
 import sqlite from "sqlite3";
 import fs from "fs";
+import CoinInfo from "./CoinInfo";
 
 const DB_PATH = `${__dirname}/../data/CoinDatabase.db`;
 const DB_INIT_FILE = `${__dirname}/../data/DBinit.sql`;
@@ -9,16 +10,6 @@ const START_DATE = "2021-01-01";
 const END_DATE = "2021-12-31";
 const FETCH_URL = `https://api.apilayer.com/fixer/timeseries"
 "?start_date=${START_DATE}&end_date=${END_DATE}&base=${BASE_COIN}`;
-
-interface CoinInfo
-{
-  success: boolean;
-  rates: {
-    [date: string]: {
-      [coin: string]: number
-    }
-  }
-}
 
 /**
  * Request the coin data from the Fixer.io api.

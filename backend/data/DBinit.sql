@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS CoinValue (
-    Coin TEXT NOT NULL,
-    EntryDate TEXT NOT NULL,
-    Price REAL NOT NULL
+    coin TEXT NOT NULL,
+    entryDate TEXT NOT NULL,
+    price REAL NOT NULL
 );

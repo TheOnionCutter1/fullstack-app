@@ -20,6 +20,10 @@ interface CoinInfo
   }
 }
 
+/**
+ * Request the coin data from the Fixer.io api.
+ * @returns A promise to the coin data.
+ */
 function requestData()
 {
   const myHeaders = new Headers();
@@ -52,6 +56,10 @@ function requestData()
     });
 }
 
+/**
+ * Open the database and create the required table in it, if they do not exist.
+ * @returns The opened database object.
+ */
 function openDatabase()
 {
   const db = new sqlite.Database(DB_PATH);
@@ -60,10 +68,15 @@ function openDatabase()
   return db.exec(dbInitStatement.toString());
 }
 
+/**
+ * Insert data to the database.
+ * @param db The database object.
+ * @param data The data to insert.
+ */
 function writeDataToDatabase(db: sqlite.Database, data: CoinInfo)
 {
-  const statement = db.prepare("INSERT INTO CoinValue (coin, entryDate, price) " +
-    "VALUES (?, ?, ?);");
+  const statement = db.prepare("INSERT INTO CoinValue " + 
+  "(coin, entryDate, price) VALUES (?, ?, ?);");
 
   for (const date of Object.keys(data.rates))
   {
@@ -74,6 +87,15 @@ function writeDataToDatabase(db: sqlite.Database, data: CoinInfo)
   }
 }
 
+/**
+ * Read all of the coin data from the database.
+ * @param db The database object.
+ * @param callback A callback that will be called
+ * when the operation is completed.
+ * The first parameter of the callback is a boolean that states whether the
+ * database is empty.
+ * The second parameter is the data that was read from the database.
+ */
 function getDataFromDatabase(db: sqlite.Database,
   callback: (empty: boolean, result: CoinInfo) => unknown)
 {

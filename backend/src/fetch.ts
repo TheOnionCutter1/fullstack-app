@@ -24,10 +24,10 @@ interface CoinInfo
  * Request the coin data from the Fixer.io api.
  * @returns A promise to the coin data.
  */
-function requestData()
+async function requestData()
 {
   const myHeaders = new Headers();
-  const errorResult: CoinInfo = {
+  let result: CoinInfo = {
     success: false,
     rates: {}
   };
@@ -44,16 +44,18 @@ function requestData()
     headers: myHeaders
   };
 
-  return fetch(FETCH_URL,
-    requestOptions)
-    .then(response => response.json())
-    .then(requestResult => requestResult as CoinInfo)
-    .catch(error =>
+  try
     {
-      console.log("error", error);
+    const response = await fetch(FETCH_URL, requestOptions);
+    const requestResult = await response.json();
 
-      return errorResult;
-    });
+    result = requestResult;
+  } catch (error)
+  {
+    console.error("Error while fetching data from Fixer.io:", error);
+  }
+
+  return result;
 }
 
 /**

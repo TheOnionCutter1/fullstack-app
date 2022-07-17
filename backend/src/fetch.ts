@@ -66,7 +66,14 @@ function openDatabase(callback: (db: sqlite.Database | null) => void)
   const db = new sqlite.Database(DB_PATH);
   const dbInitStatement = fs.readFileSync(DB_INIT_FILE);
 
-  db.exec(dbInitStatement.toString(), (_) => callback(db));
+  db.exec(dbInitStatement.toString(), (err) =>
+  {
+    if (err)
+    {
+      throw err;
+    }
+    callback(db);
+  });
 }
 
 /**

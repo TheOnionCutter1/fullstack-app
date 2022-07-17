@@ -62,15 +62,23 @@ async function requestData()
 function openDatabase(callback: (db: sqlite.Database) => void)
 {
   const db = new sqlite.Database(DB_PATH);
-  const dbInitStatement = fs.readFileSync(DB_INIT_FILE);
 
-  db.exec(dbInitStatement.toString(), (err) =>
+  fs.readFile(DB_INIT_FILE, (err, dbInitStatement) =>
   {
     if (err)
     {
-      throw err;
+      throw new Error(
+        "Reading the database initialization file has failed: " + err.message
+      );
     }
-    callback(db);
+    db.exec(dbInitStatement.toString(), (err) =>
+    {
+      if (err)
+      {
+        throw err;
+      }
+      callback(db);
+    });
   });
 }
 

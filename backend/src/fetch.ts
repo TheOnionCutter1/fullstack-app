@@ -57,12 +57,10 @@ function openDatabase()
   const db = new sqlite.Database(DB_PATH);
   const dbInitStatement = fs.readFileSync(DB_INIT_FILE);
 
-  db.run(dbInitStatement.toString());
-
-  return db;
+  return db.exec(dbInitStatement.toString());
 }
 
-function writeDataToDatabase(data: CoinInfo)
+function writeDataToDatabase(db: sqlite.Database, data: CoinInfo)
 {
   // TODO implement
 }
@@ -75,7 +73,7 @@ function isDatabaseEmpty(db: sqlite.Database,
   db.each(statement, (_, count) => callback(count > 0));
 }
 
-function getDataFromDatabase()
+function getDataFromDatabase(db: sqlite.Database)
 {
   // TODO implement
 }

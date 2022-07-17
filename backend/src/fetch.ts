@@ -42,8 +42,8 @@ function requestData()
 
   return fetch(FETCH_URL,
     requestOptions)
-    .then(response => response.text())
-    .then(requestResult => JSON.parse(requestResult) as CoinInfo)
+    .then(response => response.json())
+    .then(requestResult => requestResult as CoinInfo)
     .catch(error =>
     {
       console.log("error", error);

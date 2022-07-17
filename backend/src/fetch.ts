@@ -40,6 +40,9 @@ async function requestData()
     const response = await fetch(FETCH_URL, requestOptions);
     const requestResult = await response.json();
 
+    // TODO Remove print debugging
+    console.log(requestResult);
+
     result = requestResult;
   } catch (error)
   {

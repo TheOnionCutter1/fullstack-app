@@ -75,7 +75,7 @@ function getLocalData(callback: (data: CoinInfo | null) => void)
       else
       {
         callback(JSON.parse(data.toString()) as CoinInfo);
-      } fs.close(fd);
+      }
     });
   });
 }

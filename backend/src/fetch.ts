@@ -1,6 +1,7 @@
 import sqlite from "sqlite3";
 import fs from "fs";
 import CoinInfo from "./CoinInfo";
+import fetch from "node-fetch";
 
 // The runtime files will be at the "dist" directory
 const DB_PATH = `${__dirname}/../../data/CoinDatabase.db`;
@@ -18,7 +19,6 @@ const FETCH_URL = `https://api.apilayer.com/fixer/timeseries"
  */
 async function requestData()
 {
-  const myHeaders = new Headers();
   let result: CoinInfo = {
     success: false,
     rates: {}
@@ -30,23 +30,22 @@ async function requestData()
       "Please create a .env file and enter a Fixer.io API key under the API_KEY field"
     );
   }
-  myHeaders.append("apikey", process.env.API_KEY);
-
-  const requestOptions: RequestInit = {
-    method: "GET",
-    redirect: "follow",
-    headers: myHeaders
-  };
 
   try
   {
-    const response = await fetch(FETCH_URL, requestOptions);
+    const response = await fetch(FETCH_URL, {
+      method: "GET",
+      redirect: "follow",
+      headers: {
+        apikey: process.env.API_KEY
+      }
+    });
     const requestResult = await response.json();
 
     // TODO Remove print debugging
     console.log(requestResult);
 
-    result = requestResult;
+    result = requestResult as CoinInfo;
   } catch (error)
   {
     console.error("Error while fetching data from Fixer.io:", error);

@@ -165,15 +165,18 @@ export default function fetchCoinData(callback: (data: CoinInfo) => void)
     {
       if (empty)
       {
-        requestData().then((result) => callback(result));
+        requestData().then((result) =>
+        {
+          callback(result);
+          if (result.success)
+          {
+            writeDataToDatabase(db, result);
+          }
+        });
       }
       else
       {
         callback(data);
-        if (data.success)
-        {
-          writeDataToDatabase(db, data);
-        }
       }
     });
   });

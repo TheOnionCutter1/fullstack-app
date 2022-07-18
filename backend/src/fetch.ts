@@ -141,6 +141,10 @@ function getDataFromDatabase(db: sqlite.Database,
     }
     else
     {
+      if (!data.rates[row.entryDate])
+      {
+        data.rates[row.entryDate] = {};
+      }
       data.rates[row.entryDate][row.coin] = row.price;
     }
   }, (_, count) => callback(count === 0, data));

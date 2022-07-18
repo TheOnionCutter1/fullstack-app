@@ -2,8 +2,9 @@ import sqlite from "sqlite3";
 import fs from "fs";
 import CoinInfo from "./CoinInfo";
 
-const DB_PATH = `${__dirname}/../data/CoinDatabase.db`;
-const DB_INIT_FILE = `${__dirname}/../data/DBinit.sql`;
+// The runtime files will be at the "dist" directory
+const DB_PATH = `${__dirname}/../../data/CoinDatabase.db`;
+const DB_INIT_FILE = `${__dirname}/../../data/DBinit.sql`;
 
 const BASE_COIN = "USD";
 const START_DATE = "2021-01-01";

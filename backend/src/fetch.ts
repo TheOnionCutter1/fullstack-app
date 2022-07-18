@@ -91,7 +91,6 @@ function writeDataToDatabase(db: sqlite.Database, data: CoinInfo)
 {
   const statement = db.prepare("INSERT INTO CoinValue " +
     "(coin, entryDate, price) VALUES (?, ?, ?);");
-  let rollback = false;
 
   // Write the changes in serialized mode
   // so the queries will run one by one
@@ -102,19 +101,12 @@ function writeDataToDatabase(db: sqlite.Database, data: CoinInfo)
     {
       for (const coin of Object.keys(data.rates[date]))
       {
-        if (rollback)
-        {
-          return;
-        }
-
         statement.run([coin, date, data.rates[date][coin]], (err) =>
         {
-          // An error will be raised only if the unique constraint failed
           if (err)
           {
-            console.error("Data is already written, rolling back");
             db.run("ROLLBACK;");
-            rollback = true;
+            throw new Error("Writing to the database has failed");
           }
         });
       }

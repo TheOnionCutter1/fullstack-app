@@ -1,11 +1,9 @@
-import sqlite from "sqlite3";
 import fs from "fs";
 import CoinInfo from "./CoinInfo";
 import fetch from "node-fetch";
 
 // The runtime files will be at the "dist" directory
 const DB_PATH = `${__dirname}/../../data/data.json`;
-const DB_INIT_FILE = `${__dirname}/../../data/DBinit.sql`;
 
 const BASE_COIN = "USD";
 const START_DATE = "2021-01-01";
@@ -79,7 +77,7 @@ function getLocalData(callback: (data: CoinInfo | null) => void)
       else
       {
         callback(JSON.parse(data.toString()) as CoinInfo);
-      }  fs.close(fd);
+      } fs.close(fd);
     });
   });
 }

@@ -8,6 +8,8 @@ logs
 **/*.backup.*
 **/*.back.*
 
+CoinDatabase.db
+
 node_modules
 bower_components
 

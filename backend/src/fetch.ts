@@ -3,7 +3,7 @@ import CoinInfo from "./CoinInfo";
 import fetch from "node-fetch";
 
 // The runtime files will be at the "dist" directory
-const DB_PATH = `${__dirname}/../../data/data.json`;
+const DB_PATH = `${__dirname}/../../data/CoinData.json`;
 
 const BASE_COIN = "USD";
 const START_DATE = "2021-01-01";

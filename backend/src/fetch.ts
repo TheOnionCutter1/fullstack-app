@@ -34,8 +34,7 @@ async function requestData()
 
   try
   {
-    // TODO Remove print debugging
-    console.log("REQUESTING FROM API");
+    console.log("Requesting data from Fixer...");
     const response = await fetch(FETCH_URL, {
       method: "GET",
       redirect: "follow",

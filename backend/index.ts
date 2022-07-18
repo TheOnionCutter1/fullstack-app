@@ -24,6 +24,6 @@ app.get("/fetch", (req: Request, res: Response) =>
 app.listen(PORT, () =>
 {
   console.log(
-    `[server]: Backend server is running at https://localhost:${PORT}`
+    `Backend server is running at https://localhost:${PORT}`
   );
 });

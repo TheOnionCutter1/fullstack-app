@@ -108,7 +108,7 @@ export default function fetchCoinData(callback: (data: CoinInfo) => void)
   {
     if (data)
     {
-      console.log("Data retrieved from the local database");
+      console.log("Data was retrieved from the local database");
       callback(data);
     }
     else

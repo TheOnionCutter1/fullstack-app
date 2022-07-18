@@ -4,7 +4,7 @@ import CoinInfo from "./CoinInfo";
 import fetch from "node-fetch";
 
 // The runtime files will be at the "dist" directory
-const DB_PATH = `${__dirname}/../../data/CoinDatabase.db`;
+const DB_PATH = `${__dirname}/../../data/data.json`;
 const DB_INIT_FILE = `${__dirname}/../../data/DBinit.sql`;
 
 const BASE_COIN = "USD";
@@ -33,6 +33,8 @@ async function requestData()
 
   try
   {
+    // TODO Remove print debugging
+    console.log("REQUESTING FROM API");
     const response = await fetch(FETCH_URL, {
       method: "GET",
       redirect: "follow",
@@ -42,8 +44,6 @@ async function requestData()
     });
     const requestResult = await response.json();
 
-    // TODO Remove print debugging
-    console.log(requestResult);
 
     result = requestResult as CoinInfo;
   } catch (error)
@@ -54,100 +54,39 @@ async function requestData()
   return result;
 }
 
-/**
- * Open the database and create the required table in it, if they do not exist.
- * @param callback A callback that receives the database object and will
- * be called when the database initialization is over.
- */
-function openDatabase(callback: (db: sqlite.Database) => void)
+function getLocalData(callback: (data: CoinInfo | null) => void)
 {
-  const db = new sqlite.Database(DB_PATH);
-
-  fs.readFile(DB_INIT_FILE, (err, dbInitStatement) =>
+  // Create the file if it does not exist
+  fs.open(DB_PATH, "a+", (err, fd) =>
   {
     if (err)
     {
-      throw new Error(
-        "Reading the database initialization file has failed: " + err.message
-      );
+      throw err;
     }
-    db.exec(dbInitStatement.toString(), (err) =>
+
+    fs.close(fd);
+    fs.readFile(DB_PATH, (err, data) =>
     {
       if (err)
       {
         throw err;
       }
-      callback(db);
+
+      if (data.length === 0)
+      {
+        callback(null);
+      }
+      else
+      {
+        callback(JSON.parse(data.toString()) as CoinInfo);
+      }  fs.close(fd);
     });
   });
 }
 
-/**
- * Insert data to the database.
- * @param db The database object.
- * @param data The data to insert.
- */
-function writeDataToDatabase(db: sqlite.Database, data: CoinInfo)
+function saveDataToLocalFile(data: CoinInfo)
 {
-  const statement = db.prepare("INSERT INTO CoinValue " +
-    "(coin, entryDate, price) VALUES (?, ?, ?);");
-
-  // Write the changes in serialized mode
-  // so the queries will run one by one
-  db.serialize(() =>
-  {
-    db.run("BEGIN;");
-    for (const date of Object.keys(data.rates))
-    {
-      for (const coin of Object.keys(data.rates[date]))
-      {
-        statement.run([coin, date, data.rates[date][coin]], (err) =>
-        {
-          if (err)
-          {
-            db.run("ROLLBACK;");
-            throw new Error("Writing to the database has failed");
-          }
-        });
-      }
-    }
-    db.run("COMMIT;");
-  });
-}
-
-/**
- * Read all of the coin data from the database.
- * @param db The database object.
- * @param callback A callback that will be called
- * when the operation is completed.
- * The first parameter of the callback is a boolean that states whether the
- * database is empty.
- * The second parameter is the data that was read from the database.
- */
-function getDataFromDatabase(db: sqlite.Database,
-  callback: (empty: boolean, result: CoinInfo) => void)
-{
-  const data: CoinInfo = {
-    success: true,
-    rates: {}
-  };
-  const statement = "SELECT * FROM CoinValue";
-
-  db.each(statement, (err, row) =>
-  {
-    if (err)
-    {
-      data.success = false;
-    }
-    else
-    {
-      if (!data.rates[row.entryDate])
-      {
-        data.rates[row.entryDate] = {};
-      }
-      data.rates[row.entryDate][row.coin] = row.price;
-    }
-  }, (_, count) => callback(count === 0, data));
+  fs.writeFileSync(DB_PATH, JSON.stringify(data));
 }
 
 /**
@@ -159,25 +98,19 @@ function getDataFromDatabase(db: sqlite.Database,
  */
 export default function fetchCoinData(callback: (data: CoinInfo) => void)
 {
-  openDatabase((db) =>
+  getLocalData((data) =>
   {
-    getDataFromDatabase(db, (empty, data) =>
+    if (data)
     {
-      if (empty)
-      {
-        requestData().then((result) =>
-        {
-          callback(result);
-          if (result.success)
-          {
-            writeDataToDatabase(db, result);
-          }
-        });
-      }
-      else
+      callback(data);
+    }
+    else
+    {
+      requestData().then((data) =>
       {
         callback(data);
-      }
-    });
+        saveDataToLocalFile(data);
+      });
+    }
   });
 }

@@ -3,7 +3,8 @@ import CoinInfo from "./CoinInfo";
 import fetch from "node-fetch";
 
 // The runtime files will be at the "dist" directory
-const DB_PATH = `${__dirname}/../../data/CoinData.json`;
+const DB_DIR = `${__dirname}/../../data`;
+const DB_PATH = `${DB_DIR}/CoinData.json`;
 
 const BASE_COIN = "USD";
 const START_DATE = "2021-01-01";
@@ -54,6 +55,11 @@ async function requestData()
 
 function getLocalData(callback: (data: CoinInfo | null) => void)
 {
+  // Create the file's directory if it does not exists
+  if (!fs.existsSync(DB_DIR))
+  {
+    fs.mkdirSync(DB_DIR);
+  }
   // Create the file if it does not exist
   fs.open(DB_PATH, "a+", (err, fd) =>
   {

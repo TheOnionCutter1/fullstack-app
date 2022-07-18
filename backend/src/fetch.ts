@@ -10,8 +10,8 @@ const DB_INIT_FILE = `${__dirname}/../../data/DBinit.sql`;
 const BASE_COIN = "USD";
 const START_DATE = "2021-01-01";
 const END_DATE = "2021-12-31";
-const FETCH_URL = `https://api.apilayer.com/fixer/timeseries"
-"?start_date=${START_DATE}&end_date=${END_DATE}&base=${BASE_COIN}`;
+const FETCH_URL = `https://api.apilayer.com/fixer/timeseries
+?start_date=${START_DATE}&end_date=${END_DATE}&base=${BASE_COIN}`;
 
 /**
  * Request the coin data from the Fixer.io api.

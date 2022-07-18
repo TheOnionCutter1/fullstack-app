@@ -166,7 +166,10 @@ export default function fetchCoinData(callback: (data: CoinInfo) => void)
       else
       {
         callback(data);
-        writeDataToDatabase(db, data);
+        if (data.success)
+        {
+          writeDataToDatabase(db, data);
+        }
       }
     });
   });

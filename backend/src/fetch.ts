@@ -52,6 +52,14 @@ async function requestData()
   return result;
 }
 
+/**
+ * Get the data from the local database.
+ * @param callback A callback function that will be called
+ * when the data is retrieved.
+ * If the database is empty, the parameter of the function is null.
+ * If the database is not empty,
+ * the function receives the retrieved data as a parameter.
+ */
 function getLocalData(callback: (data: CoinInfo | null) => void)
 {
   // Create the file's directory if it does not exists
@@ -87,11 +95,6 @@ function getLocalData(callback: (data: CoinInfo | null) => void)
   });
 }
 
-function saveDataToLocalFile(data: CoinInfo)
-{
-  fs.writeFileSync(DB_PATH, JSON.stringify(data));
-}
-
 /**
  * Fetch the coin data.
  * If any data is present at the database, fetch from it.
@@ -114,7 +117,7 @@ export default function fetchCoinData(callback: (data: CoinInfo) => void)
       requestData().then((data) =>
       {
         callback(data);
-        saveDataToLocalFile(data);
+        fs.writeFileSync(DB_PATH, JSON.stringify(data));
       });
     }
   });

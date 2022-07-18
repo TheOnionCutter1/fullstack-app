@@ -1,15 +1,16 @@
-import sqlite from "sqlite3";
 import fs from "fs";
 import CoinInfo from "./CoinInfo";
+import fetch from "node-fetch";
 
-const DB_PATH = `${__dirname}/../data/CoinDatabase.db`;
-const DB_INIT_FILE = `${__dirname}/../data/DBinit.sql`;
+// The runtime files will be at the "dist" directory
+const DB_DIR = `${__dirname}/../../data`;
+const DB_PATH = `${DB_DIR}/CoinData.json`;
 
 const BASE_COIN = "USD";
 const START_DATE = "2021-01-01";
 const END_DATE = "2021-12-31";
-const FETCH_URL = `https://api.apilayer.com/fixer/timeseries"
-"?start_date=${START_DATE}&end_date=${END_DATE}&base=${BASE_COIN}`;
+const FETCH_URL = `https://api.apilayer.com/fixer/timeseries
+?start_date=${START_DATE}&end_date=${END_DATE}&base=${BASE_COIN}`;
 
 /**
  * Request the coin data from the Fixer.io api.
@@ -17,9 +18,11 @@ const FETCH_URL = `https://api.apilayer.com/fixer/timeseries"
  */
 async function requestData()
 {
-  const myHeaders = new Headers();
   let result: CoinInfo = {
     success: false,
+    start_date: "",
+    end_date: "",
+    base: "",
     rates: {}
   };
 
@@ -29,23 +32,18 @@ async function requestData()
       "Please create a .env file and enter a Fixer.io API key under the API_KEY field"
     );
   }
-  myHeaders.append("apikey", process.env.API_KEY);
-
-  const requestOptions: RequestInit = {
-    method: "GET",
-    redirect: "follow",
-    headers: myHeaders
-  };
 
   try
   {
-    const response = await fetch(FETCH_URL, requestOptions);
-    const requestResult = await response.json();
+    const response = await fetch(FETCH_URL, {
+      method: "GET",
+      redirect: "follow",
+      headers: {
+        apikey: process.env.API_KEY
+      }
+    });
 
-    // TODO Remove print debugging
-    console.log(requestResult);
-
-    result = requestResult;
+    result = await response.json() as CoinInfo;
   } catch (error)
   {
     console.error("Error while fetching data from Fixer.io:", error);
@@ -55,95 +53,46 @@ async function requestData()
 }
 
 /**
- * Open the database and create the required table in it, if they do not exist.
- * @param callback A callback that receives the database object and will
- * be called when the database initialization is over.
+ * Get the data from the local database.
+ * @param callback A callback function that will be called
+ * when the data is retrieved.
+ * If the database is empty, the parameter of the function is null.
+ * If the database is not empty,
+ * the function receives the retrieved data as a parameter.
  */
-function openDatabase(callback: (db: sqlite.Database) => void)
+function getLocalData(callback: (data: CoinInfo | null) => void)
 {
-  const db = new sqlite.Database(DB_PATH);
-
-  fs.readFile(DB_INIT_FILE, (err, dbInitStatement) =>
+  // Create the file's directory if it does not exists
+  if (!fs.existsSync(DB_DIR))
+  {
+    fs.mkdirSync(DB_DIR);
+  }
+  // Create the file if it does not exist
+  fs.open(DB_PATH, "a+", (err, fd) =>
   {
     if (err)
     {
-      throw new Error(
-        "Reading the database initialization file has failed: " + err.message
-      );
+      throw err;
     }
-    db.exec(dbInitStatement.toString(), (err) =>
+
+    fs.close(fd);
+    fs.readFile(DB_PATH, (err, data) =>
     {
       if (err)
       {
         throw err;
       }
-      callback(db);
+
+      if (data.length === 0)
+      {
+        callback(null);
+      }
+      else
+      {
+        callback(JSON.parse(data.toString()) as CoinInfo);
+      }
     });
   });
-}
-
-/**
- * Insert data to the database.
- * @param db The database object.
- * @param data The data to insert.
- */
-function writeDataToDatabase(db: sqlite.Database, data: CoinInfo)
-{
-  const statement = db.prepare("INSERT INTO CoinValue " +
-    "(coin, entryDate, price) VALUES (?, ?, ?);");
-
-  // Write the changes in serialized mode
-  // so the queries will run one by one
-  db.serialize(() =>
-  {
-    db.run("BEGIN;");
-    for (const date of Object.keys(data.rates))
-    {
-      for (const coin of Object.keys(data.rates[date]))
-      {
-        statement.run([coin, date, data.rates[date][coin]], (err) =>
-        {
-          if (err)
-          {
-            db.run("ROLLBACK;");
-            throw new Error("Writing to the database has failed");
-          }
-        });
-      }
-    }
-    db.run("COMMIT;");
-  });
-}
-
-/**
- * Read all of the coin data from the database.
- * @param db The database object.
- * @param callback A callback that will be called
- * when the operation is completed.
- * The first parameter of the callback is a boolean that states whether the
- * database is empty.
- * The second parameter is the data that was read from the database.
- */
-function getDataFromDatabase(db: sqlite.Database,
-  callback: (empty: boolean, result: CoinInfo) => void)
-{
-  const data: CoinInfo = {
-    success: true,
-    rates: {}
-  };
-  const statement = "SELECT * FROM CoinValue";
-
-  db.each(statement, (err, row) =>
-  {
-    if (err)
-    {
-      data.success = false;
-    }
-    else
-    {
-      data.rates[row.entryDate][row.coin] = row.price;
-    }
-  }, (_, count) => callback(count > 0, data));
 }
 
 /**
@@ -155,19 +104,21 @@ function getDataFromDatabase(db: sqlite.Database,
  */
 export default function fetchCoinData(callback: (data: CoinInfo) => void)
 {
-  openDatabase((db) =>
+  getLocalData((data) =>
   {
-    getDataFromDatabase(db, (empty, data) =>
+    if (data)
     {
-      if (empty)
-      {
-        requestData().then((result) => callback(result));
-      }
-      else
+      console.log("Data was retrieved from the local database");
+      callback(data);
+    }
+    else
+    {
+      console.log("Requesting data from Fixer...");
+      requestData().then((data) =>
       {
         callback(data);
-        writeDataToDatabase(db, data);
-      }
-    });
+        fs.writeFileSync(DB_PATH, JSON.stringify(data));
+      });
+    }
   });
 }

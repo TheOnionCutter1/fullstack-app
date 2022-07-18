@@ -35,7 +35,6 @@ async function requestData()
 
   try
   {
-    console.log("Requesting data from Fixer...");
     const response = await fetch(FETCH_URL, {
       method: "GET",
       redirect: "follow",
@@ -106,10 +105,12 @@ export default function fetchCoinData(callback: (data: CoinInfo) => void)
   {
     if (data)
     {
+      console.log("Data retrieved from the local database");
       callback(data);
     }
     else
     {
+      console.log("Requesting data from Fixer...");
       requestData().then((data) =>
       {
         callback(data);

@@ -40,10 +40,8 @@ async function requestData()
         apikey: process.env.API_KEY
       }
     });
-    const requestResult = await response.json();
 
-
-    result = requestResult as CoinInfo;
+    result = await response.json() as CoinInfo;
   } catch (error)
   {
     console.error("Error while fetching data from Fixer.io:", error);

@@ -19,6 +19,9 @@ async function requestData()
 {
   let result: CoinInfo = {
     success: false,
+    start_date: "",
+    end_date: "",
+    base: "",
     rates: {}
   };
 

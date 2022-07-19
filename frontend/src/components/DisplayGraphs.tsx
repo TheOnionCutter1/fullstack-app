@@ -21,7 +21,8 @@ function RenderGraph({ data }: { data: CoinInfo })
     {
       info.rates[date] = data.rates[date][info.coin];
     }
-    graphs.push(<><CoinGraph data={info} /><br /><br /></>);
+    graphs.push(CoinGraph({ data: info }));
+    graphs.push(<><br /><br /></>);
   }
 
   return <>{graphs}</>;

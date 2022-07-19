@@ -12,7 +12,6 @@ export default function CoinGraph({ data }: { data: SingleCoinInfo })
           datasets: [{
             label: data.coin,
             data: Object.values(data.rates),
-            tension: 0.8
           }]
         }}
         height={300}

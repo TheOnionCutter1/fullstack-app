@@ -12,15 +12,19 @@ function RenderGraph({ data }: { data: CoinInfo })
     coin: "",
     rates: {}
   };
-  // TODO for every coin:
-  info.coin = coins[0];
-  for (const date of dates)
-  {
-    info.rates[date] = data.rates[date][info.coin];
-  }
-  console.log(Object.keys(info.rates));
+  const graphs: JSX.Element[] = [];
 
-  return <CoinGraph data={info} />;
+  for (const coin of coins)
+  {
+    info.coin = coin;
+    for (const date of dates)
+    {
+      info.rates[date] = data.rates[date][info.coin];
+    }
+    graphs.push(<><CoinGraph data={info} /><br /><br /></>);
+  }
+
+  return <>{graphs}</>;
 }
 
 export default function DisplayGraphs({ data }: { data: CoinInfo })

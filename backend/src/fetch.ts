@@ -117,7 +117,10 @@ export default function fetchCoinData(callback: (data: CoinInfo) => void)
       requestData().then((data) =>
       {
         callback(data);
-        fs.writeFileSync(DB_PATH, JSON.stringify(data));
+        if (data.success)
+        {
+          fs.writeFileSync(DB_PATH, JSON.stringify(data));
+        }
       });
     }
   });

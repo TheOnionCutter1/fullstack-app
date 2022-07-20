@@ -2,7 +2,7 @@ import React from "react";
 import { Line } from "react-chartjs-2";
 import SingleCoinInfo from "../SingleCoinInfo";
 
-export default function CoinGraph({ data }: { data: SingleCoinInfo })
+export default function coinGraph(data: SingleCoinInfo)
 {
   return (
     <div>

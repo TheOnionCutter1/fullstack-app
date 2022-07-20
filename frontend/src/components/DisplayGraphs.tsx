@@ -25,7 +25,7 @@ function RenderGraph({ data }: { data: CoinInfo })
     graphs.push(<><br /><br /></>);
   }
 
-  return <>{graphs}</>;
+  return graphs;
 }
 
 export default function DisplayGraphs({ data }: { data: CoinInfo })

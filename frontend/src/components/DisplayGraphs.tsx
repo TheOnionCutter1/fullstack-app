@@ -2,8 +2,9 @@ import React from "react";
 import CoinInfo from "../CoinInfo";
 import SingleCoinInfo from "../SingleCoinInfo";
 import CoinGraph from "./CoinGraph";
+import { nanoid } from "nanoid";
 
-function RenderGraph({ data }: { data: CoinInfo })
+function renderGraphs(data: CoinInfo)
 {
   const dates = Object.keys(data.rates);
   const coins = Object.keys(data.rates[data.start_date])
@@ -21,8 +22,11 @@ function RenderGraph({ data }: { data: CoinInfo })
     {
       info.rates[date] = data.rates[date][info.coin];
     }
-    graphs.push(CoinGraph({ data: info }));
-    graphs.push(<><br /><br /></>);
+    graphs.push(
+      <div key={nanoid()}>
+        <CoinGraph data={info} /><br /><br />
+      </div>
+    );
   }
 
   return graphs;
@@ -40,6 +44,6 @@ export default function DisplayGraphs({ data }: { data: CoinInfo })
   }
   else
   {
-    return RenderGraph({ data: data });
+    return renderGraphs(data);
   }
 }

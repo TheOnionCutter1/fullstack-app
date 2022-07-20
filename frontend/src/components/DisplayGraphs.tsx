@@ -40,6 +40,6 @@ export default function DisplayGraphs({ data }: { data: CoinInfo })
   }
   else
   {
-    return <RenderGraph data={data} />;
+    return RenderGraph({ data: data });
   }
 }

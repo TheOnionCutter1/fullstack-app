@@ -25,7 +25,7 @@ function App()
       <span className="Heading">
         Investing Made Easy.
       </span>
-      <DisplayGraphs data={backendData} />
+      {DisplayGraphs({ data: backendData })}
     </div>
   );
 }

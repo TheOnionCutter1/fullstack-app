@@ -11,11 +11,6 @@ let coinData: CoinInfo | null = null;
 dotenv.config();
 fetchCoinData((data) => coinData = data);
 
-app.get("/api", (req: Request, res: Response) =>
-{
-  res.json({ message: "Express + TypeScript Server" });
-});
-
 app.get("/fetch", (req: Request, res: Response) =>
 {
   res.json(coinData);

@@ -2,7 +2,6 @@ import React from "react";
 import CoinInfo from "../CoinInfo";
 import SingleCoinInfo from "../SingleCoinInfo";
 import coinGraph from "./CoinGraph";
-import { nanoid } from "nanoid";
 
 function renderGraphs(data: CoinInfo)
 {
@@ -23,7 +22,7 @@ function renderGraphs(data: CoinInfo)
       info.rates[date] = data.rates[date][info.coin];
     }
     graphs.push(
-      <div key={nanoid()}>
+      <div key={graphs.length.toString()}>
         {coinGraph(info)}<br /><br />
       </div>
     );

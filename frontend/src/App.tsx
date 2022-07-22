@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import CoinInfo from "./CoinInfo";
 import "./App.css";
-import DisplayGraphs from "./components/DisplayGraphs";
+import displayGraphs from "./components/DisplayGraphs";
 import Chart from "chart.js/auto";
 import { CategoryScale } from "chart.js";
 
@@ -9,7 +9,7 @@ function App()
 {
   const [backendData, setBackendData] = useState<CoinInfo>({} as CoinInfo);
   const graphs = useMemo(
-    () => DisplayGraphs({ data: backendData }), [backendData]
+    () => displayGraphs({ data: backendData }), [backendData]
   );
 
   Chart.register(CategoryScale);

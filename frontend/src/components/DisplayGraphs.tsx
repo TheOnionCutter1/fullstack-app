@@ -32,7 +32,7 @@ function renderGraphs(data: CoinInfo)
   return graphs;
 }
 
-export default function DisplayGraphs({ data }: { data: CoinInfo })
+export default function displayGraphs({ data }: { data: CoinInfo })
 {
   if (data.success === undefined)
   {

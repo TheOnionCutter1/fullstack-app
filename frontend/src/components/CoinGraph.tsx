@@ -18,6 +18,10 @@ export default function coinGraph(data: SingleCoinInfo)
         options={{
           maintainAspectRatio: false,
           plugins: {
+            tooltip: {
+              // Show the tooltip when hovering anywhere
+              intersect: false
+            },
             legend: {
               // Disable the hide graph button
               onClick: () => void 0

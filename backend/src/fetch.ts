@@ -21,6 +21,10 @@ type ReturnedResult = {
   rate_open: number;
 }[] | { error: string };
 
+/**
+ * Request the coin data from the CoinAPI API.
+ * @returns A promise to the coin data.
+ */
 async function requestData()
 {
   const result: CoinInfo = {

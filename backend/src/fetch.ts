@@ -1,7 +1,6 @@
 import fs from "fs";
 import CoinInfo from "./CoinInfo";
 import fetch from "node-fetch";
-import { stringify } from "querystring";
 
 // The runtime files will be at the "dist" directory
 const DB_DIR = `${__dirname}/../../data`;

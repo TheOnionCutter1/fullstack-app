@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import CoinInfo from "./CoinInfo";
 import "./App.css";
 import DisplayGraphs from "./components/DisplayGraphs";
@@ -8,6 +8,9 @@ import { CategoryScale } from "chart.js";
 function App()
 {
   const [backendData, setBackendData] = useState<CoinInfo>({} as CoinInfo);
+  const graphs = useMemo(
+    () => DisplayGraphs({ data: backendData }), [backendData]
+  );
 
   Chart.register(CategoryScale);
 
@@ -25,7 +28,7 @@ function App()
       <span className="Heading">
         Investing Made Easy.
       </span>
-      {DisplayGraphs({ data: backendData })}
+      {graphs}
     </div>
   );
 }

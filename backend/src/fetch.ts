@@ -5,48 +5,83 @@ import fetch from "node-fetch";
 // The runtime files will be at the "dist" directory
 const DB_DIR = `${__dirname}/../../data`;
 const DB_PATH = `${DB_DIR}/CoinData.json`;
+const DATE_LENGTH = "YYYY-MM-DD".length;
 
 const BASE_COIN = "USD";
 const START_DATE = "2021-01-01";
 const END_DATE = "2021-12-31";
-const FETCH_URL = `https://api.apilayer.com/fixer/timeseries
-?start_date=${START_DATE}&end_date=${END_DATE}&base=${BASE_COIN}`;
+const SYMBOLS = ["BTC", "ETH", "ADA"];
+const LIMIT = 365;
+const FETCH_URL = `https://rest.coinapi.io/v1/exchangerate/
+SYMBOL/${BASE_COIN}/history?
+period_id=1DAY&time_start=${START_DATE}&time_end=${END_DATE}&limit=${LIMIT}`;
+
+type ReturnedResult = {
+  time_period_start: string;
+  rate_open: number;
+}[] | { error: string };
 
 /**
- * Request the coin data from the Fixer.io api.
+ * Request the coin data from the CoinAPI API.
  * @returns A promise to the coin data.
  */
 async function requestData()
 {
-  let result: CoinInfo = {
+  const result: CoinInfo = {
     success: false,
-    start_date: "",
-    end_date: "",
-    base: "",
+    start_date: START_DATE,
+    end_date: END_DATE,
+    base: BASE_COIN,
     rates: {}
   };
 
   if (process.env.API_KEY === undefined)
   {
     throw new Error(
-      "Please create a .env file and enter a Fixer.io API key under the API_KEY field"
+      "Please create a .env file and enter an API key under the API_KEY field"
     );
   }
 
   try
   {
-    const response = await fetch(FETCH_URL, {
-      method: "GET",
-      redirect: "follow",
-      headers: {
-        apikey: process.env.API_KEY
-      }
-    });
+    for (const coin of SYMBOLS)
+    {
+      const url = FETCH_URL.replace("SYMBOL", coin);
+      const response = await fetch(url, {
+        method: "GET",
+        redirect: "follow",
+        headers: {
+          "X-CoinAPI-Key": process.env.API_KEY
+        }
+      });
+      const returned = await response.json() as ReturnedResult;
 
-    result = await response.json() as CoinInfo;
+      // Check for success
+      if (Array.isArray(returned))
+      {
+        result.success = true;
+        for (const data of returned)
+        {
+          const date = data.time_period_start.slice(0, DATE_LENGTH);
+
+          if (result.rates[date] === undefined)
+          {
+            result.rates[date] = {};
+          }
+
+          result.rates[date][coin] = data.rate_open;
+        }
+      }
+      else
+      {
+        console.error("CoinAPI returned an error: ", returned.error);
+
+        break;
+      }
+    }
   } catch (error)
   {
-    console.error("Error while fetching data from Fixer.io:", error);
+    throw new Error("Error while fetching data from CoinAPI: " + error);
   }
 
   return result;
@@ -128,7 +163,7 @@ export default function fetchCoinData(callback: (data: CoinInfo) => void)
     }
     else
     {
-      console.log("Requesting data from Fixer...");
+      console.log("Requesting data from CoinAPI...");
       requestData().then((data) =>
       {
         changeConversion(data);

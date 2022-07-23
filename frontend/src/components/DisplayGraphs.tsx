@@ -40,6 +40,8 @@ function renderGraphs(data: CoinInfo)
       </div>
     );
   }
+  // Remove margin for the last element
+  graphs[graphs.length - 1].props.children[1].props.style.marginBottom = 0;
 
   return graphs;
 }

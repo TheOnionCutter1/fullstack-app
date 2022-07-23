@@ -14,6 +14,7 @@ export default function coinGraph(data: SingleCoinInfo)
             data: Object.values(data.rates),
           }]
         }}
+        height="300px"
         options={{
           maintainAspectRatio: false,
           borderColor: "#51cf66",

@@ -24,14 +24,16 @@ function renderGraphs(data: CoinInfo)
     }
     graphs.push(
       <div key={graphs.length.toString()}>
-
+        <h3 style={{
+          textAlign: "center",
+        }}><u>{coin}</u></h3>
         <div key={"Chart Wrapper " + graphs.length.toString()}
           style={{
             position: "relative",
+            height: "300px",
             marginLeft: "10%",
             marginRight: "10%",
-            marginTop: "10vh",
-            marginBottom: "10vh"
+            marginBottom: "20vh"
           }}>
           {coinGraph(info)}
         </div>

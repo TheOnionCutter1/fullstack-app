@@ -27,7 +27,7 @@ function App()
   return (
     <div>
       <span className="Heading">
-        Investing Made Easy.
+        Investing Made Easy
       </span>
       {graphs}
     </div>

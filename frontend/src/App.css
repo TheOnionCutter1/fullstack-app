@@ -4,8 +4,8 @@
     color: rgb(104, 104, 104);
     display: table;
     font-size: 53px;
-    margin-top: 30px;
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: 30px;
     z-index: 1;
 }

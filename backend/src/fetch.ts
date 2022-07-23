@@ -131,21 +131,6 @@ function getLocalData(callback: (data: CoinInfo | null) => void)
 }
 
 /**
- * Convert the coin to the base instead of the base to the coin.
- * @param data The data to change.
- */
-function changeConversion(data: CoinInfo)
-{
-  for (const date of Object.keys(data.rates))
-  {
-    for (const coin of Object.keys(data.rates[date]))
-    {
-      data.rates[date][coin] = 1 / data.rates[date][coin];
-    }
-  }
-}
-
-/**
  * Fetch the coin data.
  * If any data is present at the database, fetch from it.
  * Otherwise, fetch from the Fixer.io api and write the result to the database.
@@ -166,8 +151,8 @@ export default function fetchCoinData(callback: (data: CoinInfo) => void)
       console.log("Requesting data from CoinAPI...");
       requestData().then((data) =>
       {
-        changeConversion(data);
         callback(data);
+        console.log("Data was retrieved successfully from CoinAPI");
         if (data.success)
         {
           fs.writeFileSync(DB_PATH, JSON.stringify(data));

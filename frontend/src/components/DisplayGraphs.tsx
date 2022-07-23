@@ -23,7 +23,17 @@ function renderGraphs(data: CoinInfo)
     }
     graphs.push(
       <div key={graphs.length.toString()}>
-        {coinGraph(info)}<br /><br />
+        
+        <div key={"Chart Wrapper " + graphs.length.toString()}
+          style={{
+            position: "relative",
+            marginLeft: "10%",
+            marginRight: "10%",
+            marginTop: "10vh",
+            marginBottom: "10vh"
+          }}>
+          {coinGraph(info)}
+        </div>
       </div>
     );
   }

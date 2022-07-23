@@ -17,6 +17,7 @@ export default function coinGraph(data: SingleCoinInfo)
         options={{
           maintainAspectRatio: false,
           borderColor: "#51cf66",
+          responsive: true,
           elements: {
             point: {
               // Hide the points in the graph

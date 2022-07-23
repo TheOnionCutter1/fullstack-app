@@ -14,10 +14,10 @@ export default function coinGraph(data: SingleCoinInfo)
             data: Object.values(data.rates),
           }]
         }}
-        height={300}
         options={{
           maintainAspectRatio: false,
           borderColor: "#51cf66",
+          // responsive: true,
           elements: {
             point: {
               // Hide the points in the graph
@@ -27,11 +27,14 @@ export default function coinGraph(data: SingleCoinInfo)
           plugins: {
             tooltip: {
               // Show the tooltip when hovering anywhere
-              intersect: false
+              intersect: false,
+              // Show the data in the tooltip based on the mouse's position
+              // in the x axis only
+              axis: "x"
             },
             legend: {
               // Disable the hide graph button
-              onClick: () => void 0
+              display: false,
             }
           },
           // Don't show the dates on the x axis

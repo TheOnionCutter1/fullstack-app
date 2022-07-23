@@ -22,9 +22,10 @@ function App()
         setBackendData(data);
       });
   }, []);
+  document.body.style.backgroundColor = "#f5f0f0";
 
   return (
-    <div className="App">
+    <div>
       <span className="Heading">
         Investing Made Easy.
       </span>

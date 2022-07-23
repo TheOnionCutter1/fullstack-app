@@ -1,3 +1,4 @@
+import { Loader } from "@mantine/core";
 import React from "react";
 import CoinInfo from "../CoinInfo";
 import SingleCoinInfo from "../SingleCoinInfo";
@@ -23,7 +24,7 @@ function renderGraphs(data: CoinInfo)
     }
     graphs.push(
       <div key={graphs.length.toString()}>
-        
+
         <div key={"Chart Wrapper " + graphs.length.toString()}
           style={{
             position: "relative",
@@ -45,7 +46,12 @@ export default function displayGraphs({ data }: { data: CoinInfo })
 {
   if (data.success === undefined)
   {
-    return <p>Loading...</p>;
+    return <div style={{
+      display: "flex", justifyContent: "center", alignItems: "center",
+      marginTop: "10vh"
+    }}>
+      <Loader color="cyan" size="xl" />
+    </div>;
   }
   else if (data.success === false)
   {

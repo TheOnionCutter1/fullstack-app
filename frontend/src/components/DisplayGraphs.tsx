@@ -24,9 +24,20 @@ function renderGraphs(data: CoinInfo)
     }
     graphs.push(
       <div key={graphs.length.toString()}>
-        <h3 style={{
-          textAlign: "center",
-        }}><u>{coin}</u></h3>
+        <div style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center"
+        }}>
+          <h2 style={{
+            textAlign: "center",
+            display: "inline-block",
+            padding: "3px",
+            backgroundColor: "rgb(125, 125, 125)",
+            borderRadius: "6px"
+          }}>{coin}</h2>
+        </div>
+
         <div key={"Chart Wrapper " + graphs.length.toString()}
           style={{
             position: "relative",

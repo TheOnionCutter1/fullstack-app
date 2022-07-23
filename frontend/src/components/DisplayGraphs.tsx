@@ -33,7 +33,7 @@ function renderGraphs(data: CoinInfo)
             textAlign: "center",
             display: "inline-block",
             padding: "3px",
-            backgroundColor: "rgb(125, 125, 125)",
+            backgroundColor: "rgb(130, 130, 130)",
             borderRadius: "6px"
           }}>{coin}</h2>
         </div>

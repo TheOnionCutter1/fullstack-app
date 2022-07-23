@@ -40,8 +40,6 @@ function renderGraphs(data: CoinInfo)
       </div>
     );
   }
-  // Remove margin for the last element
-  graphs[graphs.length - 1].props.children[1].props.style.marginBottom = 0;
 
   return graphs;
 }
@@ -59,7 +57,9 @@ export default function displayGraphs({ data }: { data: CoinInfo })
   }
   else if (data.success === false)
   {
-    return <p>An error occurred while retrieving data</p>;
+    return <h1 style={{ textAlign: "center" }}>
+      An error occurred while retrieving data
+    </h1>;
   }
   else
   {

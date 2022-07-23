@@ -17,6 +17,13 @@ export default function coinGraph(data: SingleCoinInfo)
         height={300}
         options={{
           maintainAspectRatio: false,
+          borderColor: "#51cf66",
+          elements: {
+            point: {
+              // Hide the points in the graph
+              radius: 0
+            }
+          },
           plugins: {
             tooltip: {
               // Show the tooltip when hovering anywhere

@@ -2,6 +2,15 @@ import React from "react";
 import { Line } from "react-chartjs-2";
 import SingleCoinInfo from "../SingleCoinInfo";
 
+const GRAPH_COLOR = "#51cf66";
+
+// Create a gradient color for the graph
+const ctx = document.createElement("canvas").getContext("2d");
+const gradient = ctx ? ctx.createLinearGradient(0, 0, 0, 400) : undefined;
+
+gradient?.addColorStop(0, GRAPH_COLOR + "66");
+gradient?.addColorStop(1, GRAPH_COLOR + "00");
+
 export default function coinGraph(data: SingleCoinInfo)
 {
   return (
@@ -12,12 +21,15 @@ export default function coinGraph(data: SingleCoinInfo)
           datasets: [{
             label: data.coin,
             data: Object.values(data.rates),
+            fill: true,
+            borderJoinStyle: "miter",
           }]
         }}
         height="300px"
         options={{
           maintainAspectRatio: false,
-          borderColor: "#51cf66",
+          borderColor: GRAPH_COLOR,
+          backgroundColor: gradient,
           responsive: true,
           elements: {
             point: {
@@ -39,7 +51,7 @@ export default function coinGraph(data: SingleCoinInfo)
             }
           },
           scales: {
-          // Don't show the dates on the x axis
+            // Don't show the dates on the x axis
             x: {
               display: false
             },

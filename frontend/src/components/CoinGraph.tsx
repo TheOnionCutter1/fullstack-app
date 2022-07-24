@@ -52,10 +52,11 @@ export default function coinGraph(data: SingleCoinInfo)
           },
           scales: {
             // Don't show the dates on the x axis
-            x: {
-              display: false
+            x: { display: false },
+            y: {
+              ticks: { color: "#0" },
+              grid: { color: "#cccccc" }
             },
-            y: { ticks: { color: "#0" } },
           }
         }}
       />

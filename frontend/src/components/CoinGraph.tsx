@@ -38,11 +38,12 @@ export default function coinGraph(data: SingleCoinInfo)
               display: false,
             }
           },
-          // Don't show the dates on the x axis
           scales: {
+          // Don't show the dates on the x axis
             x: {
               display: false
-            }
+            },
+            y: { ticks: { color: "#0" } },
           }
         }}
       />

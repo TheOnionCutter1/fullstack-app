@@ -10,13 +10,16 @@ import * as Colors from "./Colors";
 function App()
 {
   const [backendData, setBackendData] = useState<CoinInfo>({} as CoinInfo);
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(
+    localStorage.getItem("dark-mode") === "true"
+  );
   const colors: Colors.ColorTheme = darkMode ? Colors.Dark : Colors.Light;
   const graphs = useMemo(
     () => displayGraphs(backendData, colors), [backendData, darkMode]
   );
 
   Chart.register(CategoryScale);
+  localStorage.setItem("dark-mode", darkMode.toString());
 
   useEffect(() =>
   {

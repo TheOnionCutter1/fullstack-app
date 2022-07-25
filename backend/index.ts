@@ -1,17 +1,24 @@
-import express, { Express, Request, Response } from 'express';
-import dotenv from 'dotenv';
+import express, { Request, Response } from "express";
+import dotenv from "dotenv";
+import fetchCoinData from "./src/fetch";
+import CoinInfo from "./src/CoinInfo";
 
-dotenv.config();
+const PORT = 8000;
 
 const app = express();
-const port = process.env.PORT;
+let coinData: CoinInfo | null = null;
 
-app.get('/', (req: Request, res: Response) =>
+dotenv.config();
+fetchCoinData((data) => coinData = data);
+
+app.get("/fetch", (req: Request, res: Response) =>
 {
-    res.send('Express + TypeScript Server');
+  res.json(coinData);
 });
 
-app.listen(port, () =>
+app.listen(PORT, () =>
 {
-    console.log(`⚡️[server]: Server is running at https://localhost:${port}`);
+  console.log(
+    `Backend server is running at https://localhost:${PORT}`
+  );
 });

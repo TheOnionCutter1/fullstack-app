@@ -23,7 +23,6 @@ export default function coinGraph(data: SingleCoinInfo, colors: ColorTheme)
             label: data.coin,
             data: Object.values(data.rates),
             fill: true,
-            borderJoinStyle: "miter",
           }]
         }}
         height="300px"

@@ -27,7 +27,7 @@ function App()
       .then((data) =>
       {
         setBackendData(data);
-      });
+      }).catch(() => setBackendData({ success: false } as CoinInfo));
   }, []);
   // Set the background color
   document.body.style.backgroundColor = colors.BACKGROUND;

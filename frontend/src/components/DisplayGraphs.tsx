@@ -1,9 +1,11 @@
+import { Loader } from "@mantine/core";
 import React from "react";
 import CoinInfo from "../CoinInfo";
+import { ColorTheme } from "../Colors";
 import SingleCoinInfo from "../SingleCoinInfo";
 import coinGraph from "./CoinGraph";
 
-function renderGraphs(data: CoinInfo)
+function renderGraphs(data: CoinInfo, colors: ColorTheme)
 {
   const dates = Object.keys(data.rates);
   const coins = Object.keys(data.rates[data.start_date])
@@ -23,7 +25,30 @@ function renderGraphs(data: CoinInfo)
     }
     graphs.push(
       <div key={graphs.length.toString()}>
-        {coinGraph(info)}<br /><br />
+        <div style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center"
+        }}>
+          <h2 style={{
+            textAlign: "center",
+            display: "inline-block",
+            padding: "3px",
+            backgroundColor: "rgb(130, 130, 130)",
+            borderRadius: "6px"
+          }}>{coin}</h2>
+        </div>
+
+        <div key={"Chart Wrapper " + graphs.length.toString()}
+          style={{
+            position: "relative",
+            height: "300px",
+            marginLeft: "10%",
+            marginRight: "10%",
+            marginBottom: "20vh"
+          }}>
+          {coinGraph(info, colors)}
+        </div>
       </div>
     );
   }
@@ -31,18 +56,25 @@ function renderGraphs(data: CoinInfo)
   return graphs;
 }
 
-export default function displayGraphs({ data }: { data: CoinInfo })
+export default function displayGraphs(data: CoinInfo, colors: ColorTheme)
 {
   if (data.success === undefined)
   {
-    return <p>Loading...</p>;
+    return <div style={{
+      display: "flex", justifyContent: "center", alignItems: "center",
+      marginTop: "10vh"
+    }}>
+      <Loader color="cyan" size="xl" />
+    </div>;
   }
   else if (data.success === false)
   {
-    return <p>An error occurred while retrieving data</p>;
+    return <h1 style={{ textAlign: "center" }}>
+      An error occurred while retrieving data
+    </h1>;
   }
   else
   {
-    return renderGraphs(data);
+    return renderGraphs(data, colors);
   }
 }

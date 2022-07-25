@@ -8,6 +8,13 @@
     position: absolute;
 }
 
+.Theme {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
 .Heading {
     color: rgb(130, 130, 130);
     display: table;

@@ -1,7 +1,7 @@
 export enum Light
 {
   BACKGROUND = "#f5f0f0",
-  GRAPH_TICKS = "cccccc"
+  GRAPH_TICKS = "#cccccc"
 }
 
 export enum Dark

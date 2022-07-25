@@ -13,7 +13,7 @@ function App()
   const [darkMode, setDarkMode] = useState(false);
   const colors: Colors.ColorTheme = darkMode ? Colors.Dark : Colors.Light;
   const graphs = useMemo(
-    () => displayGraphs({ data: backendData }), [backendData]
+    () => displayGraphs(backendData, colors), [backendData, darkMode]
   );
 
   Chart.register(CategoryScale);

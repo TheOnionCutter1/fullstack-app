@@ -1,17 +1,18 @@
 import React from "react";
 import { Line } from "react-chartjs-2";
 import SingleCoinInfo from "../SingleCoinInfo";
+import { ColorTheme } from "../Colors";
 
 const GRAPH_COLOR = "#51cf66";
 
 // Create a gradient color for the graph
 const ctx = document.createElement("canvas").getContext("2d");
-const gradient = ctx ? ctx.createLinearGradient(0, 0, 0, 400) : undefined;
+const gradient = ctx?.createLinearGradient(0, 0, 0, 400);
 
 gradient?.addColorStop(0, GRAPH_COLOR + "66");
 gradient?.addColorStop(1, GRAPH_COLOR + "00");
 
-export default function coinGraph(data: SingleCoinInfo)
+export default function coinGraph(data: SingleCoinInfo, colors: ColorTheme)
 {
   return (
     <div>
@@ -55,7 +56,7 @@ export default function coinGraph(data: SingleCoinInfo)
             x: { display: false },
             y: {
               ticks: { color: "#0" },
-              grid: { color: "#cccccc" }
+              grid: { color: colors.GRAPH_TICKS, borderColor: colors.GRAPH_TICKS }
             },
           }
         }}

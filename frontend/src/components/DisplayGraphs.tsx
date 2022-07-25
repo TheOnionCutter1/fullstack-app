@@ -1,10 +1,11 @@
 import { Loader } from "@mantine/core";
 import React from "react";
 import CoinInfo from "../CoinInfo";
+import { ColorTheme } from "../Colors";
 import SingleCoinInfo from "../SingleCoinInfo";
 import coinGraph from "./CoinGraph";
 
-function renderGraphs(data: CoinInfo)
+function renderGraphs(data: CoinInfo, colors: ColorTheme)
 {
   const dates = Object.keys(data.rates);
   const coins = Object.keys(data.rates[data.start_date])
@@ -46,7 +47,7 @@ function renderGraphs(data: CoinInfo)
             marginRight: "10%",
             marginBottom: "20vh"
           }}>
-          {coinGraph(info)}
+          {coinGraph(info, colors)}
         </div>
       </div>
     );
@@ -55,7 +56,7 @@ function renderGraphs(data: CoinInfo)
   return graphs;
 }
 
-export default function displayGraphs({ data }: { data: CoinInfo })
+export default function displayGraphs(data: CoinInfo, colors: ColorTheme)
 {
   if (data.success === undefined)
   {
@@ -74,6 +75,6 @@ export default function displayGraphs({ data }: { data: CoinInfo })
   }
   else
   {
-    return renderGraphs(data);
+    return renderGraphs(data, colors);
   }
 }

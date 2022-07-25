@@ -26,9 +26,12 @@ function App()
 
   return (
     <div>
-      <span className="Heading">
-        Investing Made Easy
-      </span>
+      <div className="Header">
+        <img src="/logo.png" className="Logo" />
+        <span className="Heading">
+          Investing Made Easy
+        </span>
+      </div>
       {graphs}
     </div>
   );

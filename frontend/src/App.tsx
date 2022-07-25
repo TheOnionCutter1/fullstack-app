@@ -11,6 +11,7 @@ function App()
 {
   const [backendData, setBackendData] = useState<CoinInfo>({} as CoinInfo);
   const [darkMode, setDarkMode] = useState(false);
+  const colors: Colors.ColorTheme = darkMode ? Colors.Dark : Colors.Light;
   const graphs = useMemo(
     () => displayGraphs({ data: backendData }), [backendData]
   );
@@ -26,8 +27,7 @@ function App()
       });
   }, []);
   // Set the background color
-  document.body.style.backgroundColor =
-    Colors[darkMode ? "Dark" : "Light"].BACKGROUND;
+  document.body.style.backgroundColor = colors.BACKGROUND;
 
   return (
     <div>

@@ -55,8 +55,12 @@ export default function coinGraph(data: SingleCoinInfo, colors: ColorTheme)
             // Don't show the dates on the x axis
             x: { display: false },
             y: {
-              ticks: { color: "#0" },
-              grid: { color: colors.GRAPH_TICKS, borderColor: colors.GRAPH_TICKS }
+              // Change the color of the labels
+              ticks: { color: colors.TICKS_LABELS },
+              // Change the color of the ticks
+              grid: {
+                color: colors.GRAPH_TICKS, borderColor: colors.GRAPH_TICKS
+              }
             },
           }
         }}
